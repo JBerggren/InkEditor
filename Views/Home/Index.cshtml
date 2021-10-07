@@ -11,17 +11,30 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
      <textarea id="editor" rows="20">
-    </textarea>
+This is an example of a Ink
+Have you tried it before?
+* Yes
+    Excellent! Then you are all set
+* No
+    Okay! Continue to find out more
+    ** [Continue] -> more_info
+-Start writing!
+-> DONE
+
+== more_info
+To find out more information, visit www.inklestudios.com/ink/
+-> DONE
+     </textarea>
     <button onclick="send()">Compile</button>
-    <div style="border:1px solid #dadada;margin-top:2em">
-        Messages
-        <div id="status" style="padding:1em">
+    <div style="margin-top:2em">
+        Compile messages
+        <div id="status" style="padding:1em;border:1px solid #dadada;">
         </div>
     </div>
 
-    <div style="border:1px solid #dadada;margin-top:2em">
-        Result
-        <div id="result" style="padding:1em">
+    <div style="margin-top:2em">
+        Run area
+        <div id="result" style="padding:1em;border:1px solid #dadada;">
         </div>
     </div>
 
