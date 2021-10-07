@@ -23,9 +23,19 @@ namespace InkBackend.Controllers
             return View();
         }
 
-        public IActionResult Compile(string code)
+        public record CompileRequest(string Code);
+        public IActionResult Compile([FromBody] CompileRequest req)
         {
-            return Json(new { Status = "It works!" });
+            var status = new List<string>();
+            var inkle = new Ink.Compiler(req.Code, new Ink.Compiler.Options()
+            {
+                errorHandler = (message, type) =>
+                 {
+                     status.Add(Enum.GetName<Ink.ErrorType>(type) + ":" + message);
+                 }
+            });
+            var story = inkle.Compile();
+            return Json(new { Status = String.Join("\n",status.ToArray()),Story= story.ToJson()});
         }
         public IActionResult Privacy()
         {

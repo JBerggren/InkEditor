@@ -11,18 +11,27 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
      <textarea id="editor" rows="20">
-
     </textarea>
     <button onclick="send()">Compile</button>
-    <div id="result" style="border:1px solid #dadada;margin-top:2em;padding:1em">
+    <div style="border:1px solid #dadada;margin-top:2em">
+        Messages
+        <div id="status" style="padding:1em">
+        </div>
+    </div>
 
+    <div style="border:1px solid #dadada;margin-top:2em">
+        Result
+        <div id="result" style="padding:1em">
+        </div>
     </div>
 
     <script>
         var editor = document.getElementById("editor");
-        var result = document.getElementById("result");
+        var statusEl = document.getElementById("status");
+        var storyContainer = document.getElementById("result");
+        var story= null;
         function send(){
-            var code = editor.innerText;
+            var code = editor.value;
             fetch("@Url.Action("Compile")",{
                 method:'POST',
                 headers:{
@@ -35,9 +44,56 @@
                 }
                 return res.json();
             }).then(data=>{
-                result.innerText = data.status;
+                storyContainer.innerHTML ="";
+                statusEl.innerText = data.status;
+                try{
+                    story = new inkjs.Story(data.story);
+                    continueStory();
+                }catch(err){
+                    statusEl.innerText = err;
+                }
             }).catch(err=> {
-                result.innerText = err;
+                statusEl.innerText = err;
+            });
+        }
+
+        function continueStory() {
+            while(story.canContinue) {
+
+                // Get ink to generate the next paragraph
+                var paragraphText = story.Continue();
+
+                // Create paragraph element
+                var paragraphElement = document.createElement('p');
+                paragraphElement.innerHTML = paragraphText;
+                storyContainer.appendChild(paragraphElement);
+            }
+            story.currentChoices.forEach(function(choice) {
+                var choiceParagraphElement = document.createElement('p');
+                choiceParagraphElement.classList.add("choice");
+                choiceParagraphElement.innerHTML = `<a href='#'>${choice.text}</a>`
+                storyContainer.appendChild(choiceParagraphElement);
+
+                // Click on choice
+                var choiceAnchorEl = choiceParagraphElement.querySelectorAll("a")[0];
+                choiceAnchorEl.addEventListener("click", function(event) {
+
+                    // Don't follow <a> link
+                    event.preventDefault();
+
+                    // Remove all existing choices
+                    var existingChoices = storyContainer.querySelectorAll('p.choice');
+                    for(var i=0; i<existingChoices.length; i++) {
+                        var c = existingChoices[i];
+                        c.parentNode.removeChild(c);
+                    }
+
+                    // Tell the story where to go next
+                    window.story.ChooseChoiceIndex(choice.index);
+
+                    // Aaand loop
+                    continueStory();
+                });
             });
         }
     </script>

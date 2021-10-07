@@ -4,4 +4,20 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="ink-engine-runtime">
+      <HintPath>libs\ink-engine-runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="ink_compiler">
+      <HintPath>libs\ink_compiler.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\js\ink.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
