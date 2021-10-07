@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@section Header{
+    <style>
+        textarea{
+            width:100%;
+        }
+    </style>
+}
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+     <textarea id="editor" rows="20">
+
+    </textarea>
+    <button onclick="send()">Compile</button>
+    <div id="result" style="border:1px solid #dadada;margin-top:2em;padding:1em">
+
+    </div>
+
+    <script>
+        var editor = document.getElementById("editor");
+        var result = document.getElementById("result");
+        function send(){
+            var code = editor.innerText;
+            fetch("@Url.Action("Compile")",{
+                method:'POST',
+                headers:{
+                    'Content-Type':"application/json"
+                },
+                body:JSON.stringify({code:code}) 
+            }).then(res=>{
+                if(!res.ok){
+                    throw "Call failed";
+                }
+                return res.json();
+            }).then(data=>{
+                result.innerText = data.status;
+            }).catch(err=> {
+                result.innerText = err;
+            });
+        }
+    </script>
+</div>
