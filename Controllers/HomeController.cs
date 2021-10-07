@@ -4,8 +4,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace InkBackend.Controllers
 {
@@ -37,11 +35,7 @@ namespace InkBackend.Controllers
             var story = inkle.Compile();
             return Json(new { Status = String.Join("\n",status.ToArray()),Story= story.ToJson()});
         }
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
+      
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
